@@ -1,6 +1,5 @@
 package homework.homework4.calculator
 
-import InfixToPostfixConverter
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*

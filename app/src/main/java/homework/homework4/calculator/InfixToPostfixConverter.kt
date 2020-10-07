@@ -1,33 +1,19 @@
+package homework.homework4.calculator
+
 import java.lang.IllegalArgumentException
 import java.lang.IllegalStateException
 import java.util.Stack
 
 class InfixToPostfixConverter {
-    private fun isOpenBracket(input: String) = input == "("
-
-    private fun isCloseBracket(input: String) = input == ")"
-
-    private fun isLessPriority(operatorA: String, operatorB: String): Boolean {
-        val priorityA = if (operatorA == "/" || operatorA == "*") 1 else 0
-        val priorityB = if (operatorB == "/" || operatorB == "*") 1 else 0
-        return priorityA <= priorityB
-    }
-
-    private fun isOperator(input: String): Boolean {
-        return input == "+" || input == "-" || input == "*" || input == "/"
-    }
-
-    private fun isNumber(input: String): Boolean {
-        if (input.isEmpty()) {
-            return false
-        }
-        val stringForCheck = if (input.first() == '-') input.substring(1) else input
-        return stringForCheck.isNotEmpty() && stringForCheck.none { !it.isDigit() }
-    }
+    private val stringUtilities = StringUtilities()
 
     private fun operatorHandling(token: String, stack: Stack<String>): String {
         var result = ""
-        while (stack.isNotEmpty() && isLessPriority(token, stack.peek()) && !isOpenBracket(stack.peek())) {
+        while (
+            stack.isNotEmpty() &&
+            stringUtilities.isLessPriority(token, stack.peek()) &&
+            !stringUtilities.isOpenBracket(stack.peek())
+        ) {
             result += stack.pop() + " "
         }
         stack.push(token)
@@ -36,7 +22,7 @@ class InfixToPostfixConverter {
 
     private fun closeBracketHandling(stack: Stack<String>): String {
         var result = ""
-        while (stack.isNotEmpty() && !isOpenBracket(stack.peek())) {
+        while (stack.isNotEmpty() && !stringUtilities.isOpenBracket(stack.peek())) {
             result += stack.pop() + " "
         }
 
@@ -52,7 +38,7 @@ class InfixToPostfixConverter {
     private fun stackIsNotEmptyHandling(stack: Stack<String>): String {
         var result = ""
         while (stack.isNotEmpty()) {
-            if (isOpenBracket(stack.peek())) {
+            if (stringUtilities.isOpenBracket(stack.peek())) {
                 throw IllegalStateException("Missing bracket")
             }
 
@@ -72,16 +58,16 @@ class InfixToPostfixConverter {
 
         for (token in tokens) {
             when {
-                isOperator(token) -> {
+                stringUtilities.isOperator(token) -> {
                     outputString += operatorHandling(token, stack)
                 }
-                isCloseBracket(token) -> {
+                stringUtilities.isCloseBracket(token) -> {
                     outputString += closeBracketHandling(stack)
                 }
-                isOpenBracket(token) -> {
+                stringUtilities.isOpenBracket(token) -> {
                     stack.push(token)
                 }
-                isNumber(token) -> {
+                stringUtilities.isNumber(token) -> {
                     outputString += "$token "
                 }
                 else -> {
@@ -90,7 +76,7 @@ class InfixToPostfixConverter {
             }
         }
 
-       outputString += stackIsNotEmptyHandling(stack)
+        outputString += stackIsNotEmptyHandling(stack)
 
         return outputString.trim()
     }

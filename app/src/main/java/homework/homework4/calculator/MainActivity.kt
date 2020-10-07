@@ -1,7 +1,5 @@
 package homework.homework4.calculator
 
-import InfixToPostfixConverter
-import PostfixCalculator
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -149,10 +147,7 @@ class MainActivity : AppCompatActivity() {
     private fun isUnaryNegative(expression: String): Boolean {
         val expressionWithoutLastToken = expression.substringBeforeLast(getLastToken(expression))
         val penultimateToken = getLastToken(expressionWithoutLastToken)
-        return expressionWithoutLastToken.isNotEmpty() && isOperator(penultimateToken)
-    }
-
-    private fun isOperator(input: String): Boolean {
-        return input == "+" || input == "-" || input == "*" || input == "/"
+        val stringUtilities = StringUtilities()
+        return expressionWithoutLastToken.isNotEmpty() && stringUtilities.isOperator(penultimateToken)
     }
 }
