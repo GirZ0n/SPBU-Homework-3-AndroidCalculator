@@ -6,15 +6,11 @@ class StringUtilities {
     fun isCloseBracket(input: String) = input == ")"
 
     fun isNumber(input: String): Boolean {
-        if (input.isEmpty()) {
-            return false
-        }
-        val stringForCheck = if (input.first() == '-') input.substring(1) else input
-        return stringForCheck.isNotEmpty() && stringForCheck.none { !it.isDigit() }
+        return input.matches(Regex("-?[0-9]+"))
     }
 
     fun isOperator(input: String): Boolean {
-        return input == "+" || input == "-" || input == "*" || input == "/"
+        return input.matches(Regex("[-+*/]"))
     }
 
     fun isLessPriority(operatorA: String, operatorB: String): Boolean {
