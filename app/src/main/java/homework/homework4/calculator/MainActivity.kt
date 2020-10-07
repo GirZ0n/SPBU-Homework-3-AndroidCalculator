@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                 val newExpression: String = when {
                     // Если в выражении есть ошибка или оно пустое,
                     // то просто число и пробел для отделения нового токена от последнего
-                    expression.contains("ERROR") || expression.isEmpty() -> {
+                    expression.contains("ERROR") || expression.isBlank() -> {
                         "$buttonText "
                     }
                     // Если последний символ последнего токена является цифрой,
@@ -154,8 +154,6 @@ class MainActivity : AppCompatActivity() {
         val expressionWithoutLastToken = expression.substringBeforeLast(getLastToken(expression))
         val penultimateToken = getLastToken(expressionWithoutLastToken)
         val stringUtilities = StringUtilities()
-        return expressionWithoutLastToken.isNotEmpty() && stringUtilities.isOperator(
-            penultimateToken
-        )
+        return penultimateToken.isBlank() || stringUtilities.isOperator(penultimateToken)
     }
 }
