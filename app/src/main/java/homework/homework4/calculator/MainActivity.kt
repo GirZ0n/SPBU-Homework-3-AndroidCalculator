@@ -52,14 +52,20 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun deleteButtonInit(expressionField: TextView) {
         val deleteButton = findViewById<Button>(R.id.delete_button)
+        val stringUtilities = StringUtilities()
         deleteButton.setOnClickListener {
             val expression = expressionField.text.trim().toString()
-            // Убираем из строки последний токен
-            val expressionWithoutLastToken =
-                    expression.substringBeforeLast(getLastToken(expression))
+            val lastToken = getLastToken(expression)
+            val newExpression = if (stringUtilities.isNumber(lastToken)) {
+                // Удаляем последнюю цифру
+                expression.substring(0 until expression.lastIndex)
+            } else {
+                // Убираем последний токен
+                expression.substringBeforeLast(getLastToken(expression))
+            }
+
             // Если нужно, то добавляем пробел в конце (для отделения нового токена от последнего)
-            expressionField.text =
-                    if (expressionWithoutLastToken.isNotEmpty()) expressionWithoutLastToken else ""
+            expressionField.text = if (!newExpression.isBlank()) newExpression else ""
         }
     }
 
@@ -83,8 +89,8 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun operatorButtonsInit(expressionField: TextView) {
         val operatorButtons = arrayOf(
-                R.id.plus_button, R.id.minus_button,
-                R.id.multiplication_button, R.id.division_button
+            R.id.plus_button, R.id.minus_button,
+            R.id.multiplication_button, R.id.division_button
         ).map { findViewById<Button>(it) }
         for (button in operatorButtons) {
             button.setOnClickListener {
@@ -100,10 +106,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun numberButtonsInit(expressionField: TextView) {
         val numberButtons = arrayOf(
-                R.id.zero_button, R.id.one_button, R.id.two_button,
-                R.id.three_button, R.id.four_button, R.id.five_button,
-                R.id.six_button, R.id.seven_button, R.id.eight_button,
-                R.id.nine_button
+            R.id.zero_button, R.id.one_button, R.id.two_button,
+            R.id.three_button, R.id.four_button, R.id.five_button,
+            R.id.six_button, R.id.seven_button, R.id.eight_button,
+            R.id.nine_button
         ).map { findViewById<Button>(it) }
 
         for (button in numberButtons) {
@@ -148,6 +154,8 @@ class MainActivity : AppCompatActivity() {
         val expressionWithoutLastToken = expression.substringBeforeLast(getLastToken(expression))
         val penultimateToken = getLastToken(expressionWithoutLastToken)
         val stringUtilities = StringUtilities()
-        return expressionWithoutLastToken.isNotEmpty() && stringUtilities.isOperator(penultimateToken)
+        return expressionWithoutLastToken.isNotEmpty() && stringUtilities.isOperator(
+            penultimateToken
+        )
     }
 }
