@@ -1,4 +1,4 @@
-package homework.homework4.androidcalculator
+package homework.homework4.calculator
 
 import PostfixCalculator
 import org.junit.jupiter.api.Test
