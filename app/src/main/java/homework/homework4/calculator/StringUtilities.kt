@@ -9,6 +9,10 @@ class StringUtilities {
         return input.matches(Regex("-?[0-9]+"))
     }
 
+    fun isRealNumber(input: String): Boolean {
+        return input.matches(Regex("[-]?[0-9]+(.[0-9]+)?"))
+    }
+
     fun isOperator(input: String): Boolean {
         return input.matches(Regex("[-+*/]"))
     }

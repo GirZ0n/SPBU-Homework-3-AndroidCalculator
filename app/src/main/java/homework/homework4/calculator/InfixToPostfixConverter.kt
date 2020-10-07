@@ -67,7 +67,7 @@ class InfixToPostfixConverter {
                 stringUtilities.isOpenBracket(token) -> {
                     stack.push(token)
                 }
-                stringUtilities.isNumber(token) -> {
+                stringUtilities.isRealNumber(token) -> {
                     outputString += "$token "
                 }
                 else -> {

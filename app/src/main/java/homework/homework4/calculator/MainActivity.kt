@@ -20,8 +20,10 @@ class MainActivity : AppCompatActivity() {
         bracketButtonsInit(expressionField)
         operatorButtonsInit(expressionField)
         numberButtonsInit(expressionField)
+        dotButtonInit(expressionField)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun equalButtonInit(expressionField: TextView) {
         val infixToPostfixConverter = InfixToPostfixConverter()
         val postfixCalculator = PostfixCalculator()
@@ -38,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                 // На вход подана пустая строка
                 ""
             }
-            expressionField.text = answer
+            expressionField.text = "$answer "
         }
     }
 
@@ -124,11 +126,11 @@ class MainActivity : AppCompatActivity() {
                     expression.contains("ERROR") || expression.isBlank() -> {
                         "$buttonText "
                     }
-                    // Если последний символ последнего токена является цифрой,
+                    // Если последний символ последнего токена является цифрой или точкой,
                     // то новую цифру следует приписать к предыдущей.
                     // Для этого убираем отделительный пробел,
                     // приписываем цифру и снова приписываем пробел
-                    lastToken.last().isDigit() -> {
+                    lastToken.last().isDigit() || lastToken.last() == '.' -> {
                         expression.trim() + buttonText + " "
                     }
                     // Если последний токен это минус, то нужно проверить, является ли он унитарным.
@@ -144,6 +146,18 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 expressionField.text = newExpression
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun dotButtonInit(expressionField: TextView) {
+        val dotButton = findViewById<Button>(R.id.dot_button)
+        val stringUtilities = StringUtilities()
+        dotButton.setOnClickListener {
+            val expression = expressionField.text.trim().toString()
+            if (stringUtilities.isNumber(getLastToken(expression))) {
+                expressionField.text = expression + dotButton.text + " "
             }
         }
     }
