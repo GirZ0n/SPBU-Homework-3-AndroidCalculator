@@ -58,13 +58,14 @@ class MainActivity : AppCompatActivity() {
         deleteButton.setOnClickListener {
             val expression = expressionField.text.trim().toString()
             val lastToken = getLastToken(expression)
-            val newExpression = if (stringUtilities.isNumber(lastToken)) {
-                // Удаляем последнюю цифру
-                expression.substring(0 until expression.lastIndex)
-            } else {
-                // Убираем последний токен
-                expression.substringBeforeLast(getLastToken(expression))
-            }
+            val newExpression =
+                if (stringUtilities.isRealNumber(lastToken) || (lastToken.isNotEmpty() && lastToken.last() == '.')) {
+                    // Удаляем последнюю цифру или точку
+                    expression.substring(0 until expression.lastIndex)
+                } else {
+                    // Убираем последний токен
+                    expression.substringBeforeLast(getLastToken(expression))
+                }
 
             // Если нужно, то добавляем пробел в конце (для отделения нового токена от последнего)
             expressionField.text = if (!newExpression.isBlank()) newExpression else ""
