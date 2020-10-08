@@ -20,4 +20,5 @@
     <string name="equal_button_text">=</string>
     <string name="expression_hint_text">Введите выражение</string>
     <string name="clean_button_text">C</string>
+    <string name="dot_button_text">.</string>
 </resources>

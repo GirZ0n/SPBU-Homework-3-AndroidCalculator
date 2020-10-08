@@ -20,8 +20,10 @@ class MainActivity : AppCompatActivity() {
         bracketButtonsInit(expressionField)
         operatorButtonsInit(expressionField)
         numberButtonsInit(expressionField)
+        dotButtonInit(expressionField)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun equalButtonInit(expressionField: TextView) {
         val infixToPostfixConverter = InfixToPostfixConverter()
         val postfixCalculator = PostfixCalculator()
@@ -38,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                 // На вход подана пустая строка
                 ""
             }
-            expressionField.text = answer
+            expressionField.text = "$answer "
         }
     }
 
@@ -56,13 +58,14 @@ class MainActivity : AppCompatActivity() {
         deleteButton.setOnClickListener {
             val expression = expressionField.text.trim().toString()
             val lastToken = getLastToken(expression)
-            val newExpression = if (stringUtilities.isNumber(lastToken)) {
-                // Удаляем последнюю цифру
-                expression.substring(0 until expression.lastIndex)
-            } else {
-                // Убираем последний токен
-                expression.substringBeforeLast(getLastToken(expression))
-            }
+            val newExpression =
+                if (stringUtilities.isRealNumber(lastToken) || (lastToken.isNotEmpty() && lastToken.last() == '.')) {
+                    // Удаляем последнюю цифру или точку
+                    expression.substring(0 until expression.lastIndex)
+                } else {
+                    // Убираем последний токен
+                    expression.substringBeforeLast(getLastToken(expression))
+                }
 
             // Если нужно, то добавляем пробел в конце (для отделения нового токена от последнего)
             expressionField.text = if (!newExpression.isBlank()) newExpression else ""
@@ -124,11 +127,11 @@ class MainActivity : AppCompatActivity() {
                     expression.contains("ERROR") || expression.isBlank() -> {
                         "$buttonText "
                     }
-                    // Если последний символ последнего токена является цифрой,
+                    // Если последний символ последнего токена является цифрой или точкой,
                     // то новую цифру следует приписать к предыдущей.
                     // Для этого убираем отделительный пробел,
                     // приписываем цифру и снова приписываем пробел
-                    lastToken.last().isDigit() -> {
+                    lastToken.last().isDigit() || lastToken.last() == '.' -> {
                         expression.trim() + buttonText + " "
                     }
                     // Если последний токен это минус, то нужно проверить, является ли он унитарным.
@@ -144,6 +147,18 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 expressionField.text = newExpression
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun dotButtonInit(expressionField: TextView) {
+        val dotButton = findViewById<Button>(R.id.dot_button)
+        val stringUtilities = StringUtilities()
+        dotButton.setOnClickListener {
+            val expression = expressionField.text.trim().toString()
+            if (stringUtilities.isNumber(getLastToken(expression))) {
+                expressionField.text = expression + dotButton.text + " "
             }
         }
     }

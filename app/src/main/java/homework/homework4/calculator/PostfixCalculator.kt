@@ -26,7 +26,7 @@ class PostfixCalculator {
                     val operandA = stack.pop()
                     stack.push(getResultOfOperation(operandA, operandB, token))
                 }
-                stringUtilities.isNumber(token) -> {
+                stringUtilities.isRealNumber(token) -> {
                     stack.push(token.toDouble())
                 }
                 else -> throw IllegalStateException("Incorrect input")
