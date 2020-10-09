@@ -169,6 +169,8 @@ class MainActivity : AppCompatActivity() {
         val expressionWithoutLastToken = expression.substringBeforeLast(getLastToken(expression))
         val penultimateToken = getLastToken(expressionWithoutLastToken)
         val stringUtilities = StringUtilities()
-        return penultimateToken.isBlank() || stringUtilities.isOperator(penultimateToken)
+        return penultimateToken.isBlank() ||
+                stringUtilities.isOperator(penultimateToken) ||
+                stringUtilities.isOpenBracket(penultimateToken)
     }
 }
